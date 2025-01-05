@@ -47,10 +47,10 @@ const AuthPage = ({ formType }) => {
       <div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           {formType === "login"
-            ? "Sign in to your account"
+            ? "Sign in"
             : formType === "register"
-            ? "Create your account"
-            : "Reset your password"}
+            ? "Create account"
+            : "Reset password"}
         </h2>
       </div>
 
@@ -64,7 +64,7 @@ const AuthPage = ({ formType }) => {
         {formType !== "login" ? (
           <button
             onClick={() => handleFormTypeChange("login")}
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+            className="text-sm font-medium text-[#4A628A] hover:text-slate-500"
           >
             Back to Sign In
           </button>
@@ -72,13 +72,13 @@ const AuthPage = ({ formType }) => {
           <>
             <button
               onClick={() => handleFormTypeChange("register")}
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+              className="text-sm font-medium text-[#4A628A] hover:text-slate-500"
             >
               Create an account
             </button>
             <button
               onClick={() => handleFormTypeChange("forgotPassword")}
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+              className="text-sm font-medium text-[#4A628A] hover:text-slate-500"
             >
               Forgot your password?
             </button>

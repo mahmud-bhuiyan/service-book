@@ -1,4 +1,24 @@
 export const AUTH_FIELDS = {
+  loginCred: {
+    id: "loginCred",
+    name: "loginCred",
+    type: "text",
+    placeholder: "Email or Mobile No or Username",
+    icon: "FaUser",
+    validation: {
+      required: "Please enter your Email or Mobile No or Username",
+    },
+  },
+  userName: {
+    id: "userName",
+    name: "userName",
+    type: "text",
+    placeholder: "Username",
+    icon: "FaUser",
+    validation: {
+      required: "Username is required",
+    },
+  },
   name: {
     id: "name",
     name: "name",
@@ -39,6 +59,6 @@ export const AUTH_FIELDS = {
   },
 };
 
-export const LOGIN_FIELDS = ["email", "password"];
-export const REGISTER_FIELDS = ["name", "email", "password"];
+export const LOGIN_FIELDS = ["loginCred", "password"];
+export const REGISTER_FIELDS = ["name", "userName", "email", "password"];
 export const FORGOT_PASSWORD_FIELDS = ["email"];
