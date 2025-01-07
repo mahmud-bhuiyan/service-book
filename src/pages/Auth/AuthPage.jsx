@@ -6,6 +6,7 @@ import {
   REGISTER_FIELDS,
   FORGOT_PASSWORD_FIELDS,
 } from "../../constants/authFields";
+import DynamicHelmet from "../../components/common/DynamicHelmet";
 
 const AuthPage = ({ formType }) => {
   const navigate = useNavigate();
@@ -21,6 +22,8 @@ const AuthPage = ({ formType }) => {
 
   const onSubmit = (data) => {
     console.log(data);
+    localStorage.setItem("userData", JSON.stringify(data));
+    navigate("/profile");
   };
 
   const getFields = () => {
@@ -42,8 +45,23 @@ const AuthPage = ({ formType }) => {
       ? "Sign Up"
       : "Reset Password";
 
+  const getTitle = () => {
+    switch (formType) {
+      case "login":
+        return "Sign In | ServiceBook";
+      case "register":
+        return "Create Account | ServiceBook";
+      case "forgotPassword":
+        return "Reset Password | ServiceBook";
+      default:
+        return "Sign In | ServiceBook";
+    }
+  };
+
   return (
     <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg">
+      <DynamicHelmet title={getTitle()} />
+
       <div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           {formType === "login"
@@ -59,7 +77,7 @@ const AuthPage = ({ formType }) => {
         onSubmit={onSubmit}
         submitButtonText={submitButtonText}
       />
-      
+
       <div className="flex items-center justify-between">
         {formType !== "login" ? (
           <button
