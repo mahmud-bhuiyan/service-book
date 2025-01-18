@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomForm from "../../components/common/CustomForm";
 import {
@@ -9,10 +10,13 @@ import DynamicHelmet from "../../components/common/DynamicHelmet";
 const ForgotPassword = () => {
   const navigate = useNavigate();
 
-  const onSubmit = (data) => {
-    console.log(data);
-    alert("Password reset instructions sent to your email.");
-    navigate("/login");
+  const [formReset, setFormReset] = useState(false);
+
+  const handleResetPassword = async (data) => {
+    console.log("handleResetPassword:",data);
+    // alert("Password reset instructions sent to your email.");
+    // navigate("/login");
+    setFormReset(true);
   };
 
   const fields = FORGOT_PASSWORD_FIELDS.map(
@@ -31,8 +35,9 @@ const ForgotPassword = () => {
 
       <CustomForm
         fields={fields}
-        onSubmit={onSubmit}
+        onSubmit={handleResetPassword}
         submitButtonText="Reset Password"
+        formReset={formReset}
       />
 
       <div className="flex justify-center">

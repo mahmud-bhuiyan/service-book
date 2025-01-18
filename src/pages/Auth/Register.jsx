@@ -1,15 +1,84 @@
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomForm from "../../components/common/CustomForm";
+import { AuthContext } from "../../context/AuthContextProvider";
 import { AUTH_FIELDS, REGISTER_FIELDS } from "../../constants/authFields";
 import DynamicHelmet from "../../components/common/DynamicHelmet";
+import handleError from "../../utils/handleError";
+import { registerUser } from "../../services/apis/User";
+import { toast } from "react-toastify";
 
 const Register = () => {
+  const { createUser, updateUserProfile } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const onSubmit = (data) => {
-    console.log(data);
-    localStorage.setItem("userData", JSON.stringify(data));
-    navigate("/profile");
+  const [loading, setLoading] = useState(false);
+  const [formReset, setFormReset] = useState(false);
+
+  const handleRegister = async (data) => {
+    const userData = {
+      name: data.name,
+      userName: data.userName,
+      email: data.email,
+      password: data.password,
+    };
+
+    try {
+      setLoading(true);
+
+      // Step 1: Register user data to MongoDB
+      const response = await registerUserToMongoDB(userData);
+
+      console.log(response)
+
+      if (response.user.email) {
+        // Step 2: Register user to Firebase authentication
+        const result = await registerUserToFirebase(
+          userData.email,
+          userData.password
+        );
+        // Step 3: Update user profile
+        if (result.user.email) {
+          await updateUserProfileInFirebase(userData.name, data?.photo);
+        }
+      }
+
+      navigate("/profile");
+      toast.success(response.message);
+      setFormReset(true);
+    } catch (error) {
+      toast.error(handleError(error));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const registerUserToMongoDB = async (userData) => {
+    try {
+      const response = await registerUser(userData);
+      return response;
+    } catch (error) {
+      throw new Error(`${handleError(error)}`);
+    }
+  };
+
+  const registerUserToFirebase = async (email, password) => {
+    try {
+      const result = await createUser(email, password);
+      return result;
+    } catch (error) {
+      throw new Error(`${handleError(error)}`);
+    }
+  };
+
+  const updateUserProfileInFirebase = async (name, photo) => {
+    try {
+      await updateUserProfile(name, photo);
+    } catch (error) {
+      console.error(
+        `Firebase user profile update error: ${handleError(error)}`
+      );
+    }
   };
 
   const fields = REGISTER_FIELDS.map((fieldName) => AUTH_FIELDS[fieldName]);
@@ -26,8 +95,12 @@ const Register = () => {
 
       <CustomForm
         fields={fields}
-        onSubmit={onSubmit}
+        onSubmit={handleRegister}
         submitButtonText="Sign Up"
+        formReset={formReset}
+        loading={loading}
+        loadingText="Registering"
+        dotsColor="#ffffff"
       />
 
       <div className="flex justify-center">

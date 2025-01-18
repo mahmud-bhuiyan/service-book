@@ -43,6 +43,16 @@ export const AUTH_FIELDS = {
       },
     },
   },
+  phone: {
+    id: "phone",
+    name: "phone",
+    type: "text",
+    placeholder: "Phone Number",
+    icon: "FaPhoneAlt",
+    validation: {
+      required: "Phone Number is required",
+    },
+  },
   password: {
     id: "password",
     name: "password",
@@ -60,5 +70,11 @@ export const AUTH_FIELDS = {
 };
 
 export const LOGIN_FIELDS = ["loginCred", "password"];
-export const REGISTER_FIELDS = ["name", "userName", "email", "password"];
+export const REGISTER_FIELDS = [
+  "name",
+  "userName",
+  "email",
+  "phone",
+  "password",
+];
 export const FORGOT_PASSWORD_FIELDS = ["email"];

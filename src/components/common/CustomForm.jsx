@@ -1,11 +1,21 @@
 import { useForm } from "react-hook-form";
 import * as FaIcons from "react-icons/fa";
+import CustomButton from "./CustomButton";
 
-const CustomForm = ({ fields, onSubmit, submitButtonText }) => {
+const CustomForm = ({
+  fields,
+  onSubmit,
+  submitButtonText,
+  formReset,
+  loading,
+  loadingText,
+  dotsColor,
+}) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
   const getIcon = (iconName) => {
@@ -14,8 +24,18 @@ const CustomForm = ({ fields, onSubmit, submitButtonText }) => {
     return IconComponent ? <IconComponent className="text-gray-400" /> : null;
   };
 
+  const handleFormSubmit = (data) => {
+    if (onSubmit) {
+      onSubmit(data);
+    }
+
+    if (formReset) {
+      reset();
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
       {fields.map((field) => {
         const icon = getIcon(field.icon);
         return (
@@ -46,12 +66,13 @@ const CustomForm = ({ fields, onSubmit, submitButtonText }) => {
       })}
 
       <div>
-        <button
+        <CustomButton
           type="submit"
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#4A628A] hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          {submitButtonText}
-        </button>
+          loading={loading}
+          buttonText={submitButtonText}
+          loadingText={loadingText}
+          dotsColor={dotsColor}
+        />
       </div>
     </form>
   );
