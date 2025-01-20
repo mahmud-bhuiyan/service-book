@@ -1,9 +1,9 @@
-import DynamicHelmet from "../../components/common/DynamicHelmet";
+import DynamicHelmet from "../../components/Custom/DynamicHelmet";
 
 const Home = () => {
   return (
     <div>
-      <DynamicHelmet title={"Home"}/>
+      <DynamicHelmet title={"Home"} />
       <h2>This is home</h2>
     </div>
   );

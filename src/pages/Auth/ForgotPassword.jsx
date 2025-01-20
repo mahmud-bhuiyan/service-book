@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CustomForm from "../../components/common/CustomForm";
-import {
-  AUTH_FIELDS,
-  FORGOT_PASSWORD_FIELDS,
-} from "../../constants/authFields";
-import DynamicHelmet from "../../components/common/DynamicHelmet";
+
+import { AUTH_FIELDS, FORGOT_PASS_FIELDS } from "../../constants/authFields";
+
+import DynamicHelmet from "../../components/Custom/DynamicHelmet";
+import CustomForm from "../../components/Custom/CustomForm";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -13,15 +12,13 @@ const ForgotPassword = () => {
   const [formReset, setFormReset] = useState(false);
 
   const handleResetPassword = async (data) => {
-    console.log("handleResetPassword:",data);
-    // alert("Password reset instructions sent to your email.");
-    // navigate("/login");
+    console.log("handleResetPassword:", data);
+    alert("Password reset instructions sent to your email.");
+    navigate("/auth/login");
     setFormReset(true);
   };
 
-  const fields = FORGOT_PASSWORD_FIELDS.map(
-    (fieldName) => AUTH_FIELDS[fieldName]
-  );
+  const fields = FORGOT_PASS_FIELDS.map((fieldName) => AUTH_FIELDS[fieldName]);
 
   return (
     <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg">
@@ -42,7 +39,7 @@ const ForgotPassword = () => {
 
       <div className="flex justify-center">
         <button
-          onClick={() => navigate("/login")}
+          onClick={() => navigate("/auth/login")}
           className="text-sm font-medium text-[#4A628A] hover:text-slate-500"
         >
           Back to Sign In

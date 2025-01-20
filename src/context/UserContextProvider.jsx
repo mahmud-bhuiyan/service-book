@@ -8,34 +8,34 @@ export const UserContextProvider = ({ children }) => {
   const { user } = useContext(AuthContext);
 
   const [allUsers, setAllUsers] = useState([]);
-  const [userDetails, setUserDetails] = useState([]);
+  const [userDetails, setUserDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // admin user data
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchUserProfile = async () => {
       if (user?.email) {
-        // Used setTimeout to fetch data
-        const timeoutId = setTimeout(async () => {
-          try {
-            setIsLoading(true);
-            const currentUser = await getUserProfile();
-            setUserDetails(currentUser.user);
-          } catch (error) {
-            console.log("null");
-          } finally {
-            setIsLoading(false);
+        try {
+          setIsLoading(true);
+          setError(null);
+          const data = await getUserProfile();
+          console.log("getUserProfile", data);
+          if (data && data.user) {
+            setUserDetails(data.user);
+          } else {
+            setError("User data not found");
           }
-        }, 1000);
-
-        return () => clearTimeout(timeoutId);
-      } else {
-        return;
+        } catch (error) {
+          setError("Failed to fetch user profile");
+          console.error("Error fetching user profile:", error);
+        } finally {
+          setIsLoading(false);
+        }
       }
     };
 
-    fetchData();
-  }, [user?.email, setUserDetails, setIsLoading]);
+    fetchUserProfile();
+  }, [user?.email]);
 
   const authInfo = {
     userDetails,
@@ -44,6 +44,7 @@ export const UserContextProvider = ({ children }) => {
     setIsLoading,
     allUsers,
     setAllUsers,
+    error,
   };
 
   return (

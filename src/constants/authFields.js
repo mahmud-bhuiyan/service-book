@@ -77,4 +77,4 @@ export const REGISTER_FIELDS = [
   "phone",
   "password",
 ];
-export const FORGOT_PASSWORD_FIELDS = ["email"];
+export const FORGOT_PASS_FIELDS = ["email"];

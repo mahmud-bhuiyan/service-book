@@ -12,7 +12,7 @@ export const registerUser = async (userData) => {
     );
 
     // Store the token in localStorage
-    const { token } = response.data;
+    const { token } = response.data.data;
 
     localStorage.setItem("userToken", token);
     return response.data;
@@ -32,7 +32,7 @@ export const signInWithGoogle = async (userData) => {
     );
 
     // Store the token in localStorage
-    const { token } = response.data;
+    const { token } = response.data.data;
 
     localStorage.setItem("userToken", token);
     return response.data;
@@ -50,10 +50,10 @@ export const userLogin = async (credentials) => {
       "/users/login",
       credentials
     );
-    
+
     // Store the token in localStorage
-    const { token } = response.data;
-    
+    const { token } = response.data.data;
+
     localStorage.setItem("userToken", token);
     return response.data;
   } catch (error) {
@@ -85,7 +85,7 @@ export const userLogout = async () => {
 // =============================================
 export const getUserProfile = async () => {
   try {
-    const response = await axiosSecureInstance.get("/users/me");
+    const response = await axiosSecureInstance.get("/users/profile");
     return response.data;
   } catch (error) {
     handleApiError(error);

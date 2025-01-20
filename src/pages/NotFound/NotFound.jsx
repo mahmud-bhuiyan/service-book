@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import DynamicHelmet from "../../components/common/DynamicHelmet";
 import { error } from "../../assets/images/images";
+import DynamicHelmet from "../../components/Custom/DynamicHelmet";
 
 const NotFound = () => {
   return (
@@ -37,7 +37,7 @@ const NotFound = () => {
           </div>
           <p className="mt-4 text-gray-600">
             Let us get you back{" "}
-            <Link to="/login" className="text-blue-500 font-bold">
+            <Link to="/" className="text-blue-500 font-bold">
               Home
             </Link>
             .

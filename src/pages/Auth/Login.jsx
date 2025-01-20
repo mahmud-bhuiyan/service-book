@@ -1,12 +1,15 @@
 import { useContext, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import CustomForm from "../../components/common/CustomForm";
+
 import { AUTH_FIELDS, LOGIN_FIELDS } from "../../constants/authFields";
-import { AuthContext } from "../../context/AuthContextProvider";
-import DynamicHelmet from "../../components/common/DynamicHelmet";
-import handleError from "../../utils/handleError";
 import { userLogin, userLogout } from "../../services/apis/User";
+import { AuthContext } from "../../context/AuthContextProvider";
+
+import handleError from "../../utils/handleError";
+import DynamicHelmet from "../../components/Custom/DynamicHelmet";
+import CustomForm from "../../components/Custom/CustomForm";
+import SocialLogin from "../../components/SocialLogin";
 
 const Login = () => {
   const { loginUser } = useContext(AuthContext);
@@ -18,7 +21,6 @@ const Login = () => {
   const [formReset, setFormReset] = useState(false);
 
   const handleLogin = async (data) => {
-    console.log("handleLogin:", data);
     const userData = {
       loginCred: data.loginCred,
       password: data.password,
@@ -29,23 +31,22 @@ const Login = () => {
 
       // Step 1: Login user to MongoDB
       const response = await loginUserUsingMongoDB(userData);
-      console.log("response:", response);
-      if (response.user.email) {
+      if (response?.data?.user?.email) {
         // Step 2: login user to Firebase authentication
         const firebaseResponse = await loginUserUsingFirebase(
-          response.user.email,
-          userData.password
+          response?.data?.user?.email,
+          userData?.password
         );
 
         // Error handling if user does not match between MongoDB and Firebase
-        if (response.user.email !== firebaseResponse.user.email) {
+        if (response?.data?.user?.email !== firebaseResponse?.data?.user?.email) {
           await userLogout();
-          navigate("/login");
-        } else {
-          navigate(from, { replace: true });
-          toast.success(response.message);
-          setFormReset(true);
+          navigate("/auth/login");
         }
+
+        navigate(from, { replace: true });
+        toast.success(response.message);
+        setFormReset(true);
       }
     } catch (error) {
       toast.error(error.message);
@@ -98,18 +99,20 @@ const Login = () => {
 
       <div className="flex items-center justify-between">
         <button
-          onClick={() => navigate("/register")}
+          onClick={() => navigate("/auth/register")}
           className="text-sm font-medium text-[#4A628A] hover:text-slate-500"
         >
           Create an account
         </button>
         <button
-          onClick={() => navigate("/forgot-password")}
+          onClick={() => navigate("/auth/forgot-password")}
           className="text-sm font-medium text-[#4A628A] hover:text-slate-500"
         >
           Forgot your password?
         </button>
       </div>
+      <hr />
+      <SocialLogin />
     </div>
   );
 };

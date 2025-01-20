@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../Layout/MainLayout";
+import AuthLayout from "../Layout/AuthLayout";
 import Home from "../pages/Home/Home";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
@@ -19,30 +20,6 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "login",
-        element: (
-          <PublicRoute>
-            <Login />
-          </PublicRoute>
-        ),
-      },
-      {
-        path: "register",
-        element: (
-          <PublicRoute>
-            <Register />
-          </PublicRoute>
-        ),
-      },
-      {
-        path: "forgot-password",
-        element: (
-          <PublicRoute>
-            <ForgotPassword />
-          </PublicRoute>
-        ),
-      },
-      {
         path: "profile",
         element: (
           <PrivateRoute>
@@ -50,10 +27,32 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+    ],
+  },
+  {
+    path: "/auth",
+    element: (
+      <PublicRoute>
+        <AuthLayout />
+      </PublicRoute>
+    ),
+    children: [
       {
-        path: "*",
-        element: <NotFound />,
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Register />,
+      },
+      {
+        path: "forgot-password",
+        element: <ForgotPassword />,
       },
     ],
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);

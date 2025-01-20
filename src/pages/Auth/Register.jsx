@@ -1,12 +1,15 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CustomForm from "../../components/common/CustomForm";
+import { toast } from "react-toastify";
+
 import { AuthContext } from "../../context/AuthContextProvider";
 import { AUTH_FIELDS, REGISTER_FIELDS } from "../../constants/authFields";
-import DynamicHelmet from "../../components/common/DynamicHelmet";
-import handleError from "../../utils/handleError";
 import { registerUser } from "../../services/apis/User";
-import { toast } from "react-toastify";
+
+import handleError from "../../utils/handleError";
+import DynamicHelmet from "../../components/Custom/DynamicHelmet";
+import CustomForm from "../../components/Custom/CustomForm";
+import SocialLogin from "../../components/SocialLogin";
 
 const Register = () => {
   const { createUser, updateUserProfile } = useContext(AuthContext);
@@ -29,9 +32,9 @@ const Register = () => {
       // Step 1: Register user data to MongoDB
       const response = await registerUserToMongoDB(userData);
 
-      console.log(response)
+      console.log(response);
 
-      if (response.user.email) {
+      if (response?.data?.user?.email) {
         // Step 2: Register user to Firebase authentication
         const result = await registerUserToFirebase(
           userData.email,
@@ -105,12 +108,14 @@ const Register = () => {
 
       <div className="flex justify-center">
         <button
-          onClick={() => navigate("/login")}
+          onClick={() => navigate("/auth/login")}
           className="text-sm font-medium text-[#4A628A] hover:text-slate-500"
         >
           Already have an account? Sign in
         </button>
       </div>
+      <hr />
+      <SocialLogin />
     </div>
   );
 };
