@@ -11,33 +11,16 @@ export const registerUser = async (userData) => {
       userData
     );
 
-    // Store the token in localStorage
-    const { token } = response.data.data;
+    const { success, message, data } = response.data;
 
-    localStorage.setItem("userToken", token);
-    return response.data;
+    if (success && data && data.token) {
+      localStorage.setItem("userToken", data.token);
+    }
+
+    return { success, message, data };
   } catch (error) {
-    handleApiError(error);
-  }
-};
-
-// =============================================
-//                  google sign-in
-// =============================================
-export const signInWithGoogle = async (userData) => {
-  try {
-    const response = await axiosNonSecureInstance.post(
-      "/users/google-signin",
-      userData
-    );
-
-    // Store the token in localStorage
-    const { token } = response.data.data;
-
-    localStorage.setItem("userToken", token);
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
+    const errorMessage = handleApiError(error);
+    return { success: false, message: errorMessage, data: null };
   }
 };
 
@@ -51,14 +34,39 @@ export const userLogin = async (credentials) => {
       credentials
     );
 
-    // Store the token in localStorage
-    const { token } = response.data.data;
+    const { success, message, data } = response.data;
 
-    localStorage.setItem("userToken", token);
-    return response.data;
+    if (data && data?.token) {
+      localStorage.setItem("userToken", data.token);
+    }
+
+    return { success, message, data };
   } catch (error) {
-    console.log("error:", error);
-    handleApiError(error);
+    const errorMessage = handleApiError(error);
+    return { success: false, message: errorMessage, data: null };
+  }
+};
+
+// =============================================
+//                  google sign-in
+// =============================================
+export const signInWithGoogle = async (userData) => {
+  try {
+    const response = await axiosNonSecureInstance.post(
+      "/users/google-signin",
+      userData
+    );
+
+    const { success, message, data } = response.data;
+
+    if (success && data && data.token) {
+      localStorage.setItem("userToken", data.token);
+    }
+
+    return { success, message, data };
+  } catch (error) {
+    const errorMessage = handleApiError(error);
+    return { success: false, message: errorMessage, data: null };
   }
 };
 

@@ -5,11 +5,12 @@ import { toast } from "react-toastify";
 import { AUTH_FIELDS, LOGIN_FIELDS } from "../../constants/authFields";
 import { userLogin, userLogout } from "../../services/apis/User";
 import { AuthContext } from "../../context/AuthContextProvider";
+import { AUTH_MESSAGES } from "../../constants/appConstants";
 
-import handleError from "../../utils/handleError";
 import DynamicHelmet from "../../components/Custom/DynamicHelmet";
 import CustomForm from "../../components/Custom/CustomForm";
 import SocialLogin from "../../components/SocialLogin";
+import handleApiError from "../../utils/handleApiError";
 
 const Login = () => {
   const { loginUser } = useContext(AuthContext);
@@ -30,23 +31,29 @@ const Login = () => {
       setLoading(true);
 
       // Step 1: Login user to MongoDB
-      const response = await loginUserUsingMongoDB(userData);
-      if (response?.data?.user?.email) {
+      const mongoResponse = await loginUserUsingMongoDB(userData);
+
+      if (mongoResponse.success && mongoResponse.data?.user?.email) {
         // Step 2: login user to Firebase authentication
         const firebaseResponse = await loginUserUsingFirebase(
-          response?.data?.user?.email,
-          userData?.password
+          mongoResponse.data.user.email,
+          userData.password
         );
 
-        // Error handling if user does not match between MongoDB and Firebase
-        if (response?.data?.user?.email !== firebaseResponse?.data?.user?.email) {
+        if (
+          mongoResponse.data.user.email !== firebaseResponse.data?.user?.email
+        ) {
           await userLogout();
           navigate("/auth/login");
+          toast.error(AUTH_MESSAGES.EMAIL_MISMATCH);
+          return;
         }
 
         navigate(from, { replace: true });
-        toast.success(response.message);
+        toast.success(mongoResponse.message);
         setFormReset(true);
+      } else {
+        toast.error(mongoResponse.message);
       }
     } catch (error) {
       toast.error(error.message);
@@ -57,12 +64,11 @@ const Login = () => {
 
   // Function to login user to MongoDB
   const loginUserUsingMongoDB = async (userData) => {
-    try {
-      const response = await userLogin(userData);
-      return response;
-    } catch (error) {
-      throw new Error(`${handleError(error)}`);
+    const response = await userLogin(userData);
+    if (!response.success) {
+      throw new Error(response.message);
     }
+    return response;
   };
 
   // Function to login user to Firebase authentication
@@ -71,7 +77,7 @@ const Login = () => {
       const result = await loginUser(email, password);
       return result;
     } catch (error) {
-      throw new Error(`${handleError(error)}`);
+      throw new Error(handleApiError(error));
     }
   };
 

@@ -2,9 +2,13 @@ import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-toastify";
+
 import { AuthContext } from "../context/AuthContextProvider";
-import { signInWithGoogle } from "../services/apis/User";
-import handleError from "../utils/handleError";
+import { signInWithGoogle, userLogout } from "../services/apis/User";
+import { AUTH_MESSAGES } from "../constants/appConstants";
+
+import CustomButton from "./Custom/CustomButton";
+import handleApiError from "../utils/handleApiError";
 
 const SocialLogin = () => {
   const { googleSignIn } = useContext(AuthContext);
@@ -21,18 +25,29 @@ const SocialLogin = () => {
 
       const userData = {
         name: loggedInUser.displayName,
+        userName: loggedInUser.email,
         email: loggedInUser.email,
         photoURL: loggedInUser.photoURL,
       };
 
-      const response = await signInWithGoogle(userData);
+      const { success, message, data } = await signInWithGoogle(userData);
 
-      if (response?.user?.email) {
-        toast.success(response.message);
+      if (success && data?.user) {
+        if (data.user.email !== loggedInUser.email) {
+          await userLogout();
+          toast.error(AUTH_MESSAGES.EMAIL_MISMATCH);
+          navigate("/auth/login");
+          return;
+        }
+
+        toast.success(message);
+        navigate(from, { replace: true });
+      } else {
+        toast.error(message);
       }
-      navigate(from, { replace: true });
     } catch (error) {
-      handleError(error);
+      const errorMessage = handleApiError(error);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -40,15 +55,14 @@ const SocialLogin = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <button
-        onClick={handleGoogleSignIn}
-        disabled={loading}
-        className="flex items-center justify-center px-6 py-2 border border-transparent text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 shadow-sm transition duration-150 ease-in-out"
+      <CustomButton
         type="button"
-      >
-        <FcGoogle className="w-5 h-5 mr-2" />
-        <span>{loading ? "Signing In..." : "Sign In with Google"}</span>
-      </button>
+        onClick={handleGoogleSignIn}
+        loading={loading}
+        buttonText="Sign In with Google"
+        loadingText="Signing In..."
+        icon={FcGoogle}
+      />
     </div>
   );
 };
