@@ -5,8 +5,6 @@ import { AuthContext } from "../context/AuthContextProvider";
 const PublicRoute = ({ children }) => {
   const { user } = useContext(AuthContext);
 
-  console.log("user:", user);
-
   if (user) {
     return <Navigate to="/" replace></Navigate>;
   }

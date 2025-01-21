@@ -2,10 +2,13 @@ import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-toastify";
+
 import { AuthContext } from "../context/AuthContextProvider";
-import { signInWithGoogle } from "../services/apis/User";
-import handleError from "../utils/handleError";
+import { signInWithGoogle, userLogout } from "../services/apis/User";
+import { AUTH_MESSAGES } from "../constants/appConstants";
+
 import CustomButton from "./Custom/CustomButton";
+import handleApiError from "../utils/handleApiError";
 
 const SocialLogin = () => {
   const { googleSignIn } = useContext(AuthContext);
@@ -22,18 +25,29 @@ const SocialLogin = () => {
 
       const userData = {
         name: loggedInUser.displayName,
+        userName: loggedInUser.email,
         email: loggedInUser.email,
         photoURL: loggedInUser.photoURL,
       };
 
-      const response = await signInWithGoogle(userData);
+      const { success, message, data } = await signInWithGoogle(userData);
 
-      if (response?.user?.email) {
-        toast.success(response.message);
+      if (success && data?.user) {
+        if (data.user.email !== loggedInUser.email) {
+          await userLogout();
+          toast.error(AUTH_MESSAGES.EMAIL_MISMATCH);
+          navigate("/auth/login");
+          return;
+        }
+
+        toast.success(message);
+        navigate(from, { replace: true });
+      } else {
+        toast.error(message);
       }
-      navigate(from, { replace: true });
     } catch (error) {
-      handleError(error);
+      const errorMessage = handleApiError(error);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

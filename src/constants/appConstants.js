@@ -13,3 +13,7 @@ export const FOOTER_LINKS = [
 
 export const DEFAULT_USER_PHOTO =
   "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80";
+
+export const AUTH_MESSAGES = {
+  EMAIL_MISMATCH: "Email mismatch. Please try again.",
+};

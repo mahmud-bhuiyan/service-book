@@ -6,10 +6,10 @@ import { AuthContext } from "../../context/AuthContextProvider";
 import { AUTH_FIELDS, REGISTER_FIELDS } from "../../constants/authFields";
 import { registerUser } from "../../services/apis/User";
 
-import handleError from "../../utils/handleError";
 import DynamicHelmet from "../../components/Custom/DynamicHelmet";
 import CustomForm from "../../components/Custom/CustomForm";
 import SocialLogin from "../../components/SocialLogin";
+import handleApiError from "../../utils/handleApiError";
 
 const Register = () => {
   const { createUser, updateUserProfile } = useContext(AuthContext);
@@ -30,39 +30,39 @@ const Register = () => {
       setLoading(true);
 
       // Step 1: Register user data to MongoDB
-      const response = await registerUserToMongoDB(userData);
+      const mongoResponse = await registerUserToMongoDB(userData);
 
-      console.log(response);
-
-      if (response?.data?.user?.email) {
+      if (mongoResponse.success && mongoResponse.data?.user?.email) {
         // Step 2: Register user to Firebase authentication
-        const result = await registerUserToFirebase(
+        const firebaseResponse = await registerUserToFirebase(
           userData.email,
           userData.password
         );
+
         // Step 3: Update user profile
-        if (result.user.email) {
+        if (firebaseResponse.user.email) {
           await updateUserProfileInFirebase(userData.name, data?.photo);
         }
-      }
 
-      navigate("/profile");
-      toast.success(response.message);
-      setFormReset(true);
+        navigate("/profile");
+        toast.success(mongoResponse.message);
+        setFormReset(true);
+      } else {
+        toast.error(mongoResponse.message);
+      }
     } catch (error) {
-      toast.error(handleError(error));
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
   };
 
   const registerUserToMongoDB = async (userData) => {
-    try {
-      const response = await registerUser(userData);
-      return response;
-    } catch (error) {
-      throw new Error(`${handleError(error)}`);
+    const response = await registerUser(userData);
+    if (!response.success) {
+      throw new Error(response.message);
     }
+    return response;
   };
 
   const registerUserToFirebase = async (email, password) => {
@@ -70,7 +70,7 @@ const Register = () => {
       const result = await createUser(email, password);
       return result;
     } catch (error) {
-      throw new Error(`${handleError(error)}`);
+      throw new Error(handleApiError(error));
     }
   };
 
@@ -79,7 +79,7 @@ const Register = () => {
       await updateUserProfile(name, photo);
     } catch (error) {
       console.error(
-        `Firebase user profile update error: ${handleError(error)}`
+        `Firebase user profile update error: ${handleApiError(error)}`
       );
     }
   };
