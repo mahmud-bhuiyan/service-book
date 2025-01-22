@@ -99,3 +99,22 @@ export const getUserProfile = async () => {
     handleApiError(error);
   }
 };
+
+// =============================================
+//                  reset password
+// =============================================
+export const resetPassword = async (email) => {
+  try {
+    const response = await axiosNonSecureInstance.post(
+      "/users/reset-password",
+      { email }
+    );
+
+    const { success, message } = response.data;
+
+    return { success, message };
+  } catch (error) {
+    const errorMessage = handleApiError(error);
+    return { success: false, message: errorMessage };
+  }
+};
