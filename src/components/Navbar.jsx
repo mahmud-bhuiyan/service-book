@@ -6,7 +6,7 @@ import { BiLogIn } from "react-icons/bi";
 import { FaRegUser } from "react-icons/fa";
 import { MdOutlineLogout } from "react-icons/md";
 
-import { AuthContext } from "../context/AuthContextProvider";
+import { AuthContext } from "../context/AuthContext";
 import { userLogout } from "../services/apis/User";
 import { APP_NAME, DEFAULT_USER_PHOTO } from "../constants/appConstants";
 

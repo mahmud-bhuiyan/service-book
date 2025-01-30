@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import DynamicHelmet from "../../components/Custom/DynamicHelmet";
-import { AuthContext } from "../../context/AuthContextProvider";
+import { AuthContext } from "../../context/AuthContext";
 import { FaAngleRight } from "react-icons/fa";
 
 const Home = () => {

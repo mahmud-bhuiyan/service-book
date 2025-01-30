@@ -4,7 +4,7 @@ import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./Routes/Routes";
 import AuthContextProvider from "./context/AuthContextProvider";
-import { UserContextProvider } from "./context/UserContextProvider";
+import UserContextProvider from "./context/UserContextProvider";
 import { HelmetProvider } from "react-helmet-async";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,7 +14,7 @@ createRoot(document.getElementById("root")).render(
     <AuthContextProvider>
       <UserContextProvider>
         <HelmetProvider>
-            <RouterProvider router={router} />
+          <RouterProvider router={router} />
           <ToastContainer />
         </HelmetProvider>
       </UserContextProvider>

@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 import { AUTH_FIELDS, LOGIN_FIELDS } from "../../constants/authFields";
 import { userLogin, userLogout } from "../../services/apis/User";
-import { AuthContext } from "../../context/AuthContextProvider";
+import { AuthContext } from "../../context/AuthContext";
 import { AUTH_MESSAGES } from "../../constants/appConstants";
 
 import DynamicHelmet from "../../components/Custom/DynamicHelmet";

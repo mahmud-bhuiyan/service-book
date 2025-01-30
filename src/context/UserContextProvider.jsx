@@ -1,39 +1,52 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getUserProfile } from "../services/apis/User";
-import { AuthContext } from "./AuthContextProvider";
+import { AuthContext } from "./AuthContext";
+import { UserContext } from "./UserContext";
 
-export const UserContext = createContext(null);
-
-export const UserContextProvider = ({ children }) => {
+const UserContextProvider = ({ children }) => {
   const { user } = useContext(AuthContext);
-
   const [allUsers, setAllUsers] = useState([]);
   const [userDetails, setUserDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  console.log("userDetails", userDetails);
   useEffect(() => {
+    let isMounted = true;
+
     const fetchUserProfile = async () => {
       if (user?.email) {
+        console.log(user?.email);
         try {
           setIsLoading(true);
           setError(null);
           const data = await getUserProfile();
-          if (data && data.user) {
-            setUserDetails(data.user);
-          } else {
+          if (isMounted && data && data.data.user) {
+            setUserDetails(data.data.user);
+            console.log("User profile fetched:", data.data.user);
+          } else if (isMounted) {
             setError("User data not found");
           }
         } catch (error) {
-          setError("Failed to fetch user profile");
-          console.error("Error fetching user profile:", error);
+          if (isMounted) {
+            setError("Failed to fetch user profile");
+            console.error("Error fetching user profile:", error);
+          }
         } finally {
-          setIsLoading(false);
+          if (isMounted) {
+            setIsLoading(false);
+          }
         }
+      } else {
+        setIsLoading(false);
       }
     };
 
     fetchUserProfile();
+
+    return () => {
+      isMounted = false;
+    };
   }, [user?.email]);
 
   const authInfo = {
@@ -50,3 +63,5 @@ export const UserContextProvider = ({ children }) => {
     <UserContext.Provider value={authInfo}>{children}</UserContext.Provider>
   );
 };
+
+export default UserContextProvider;

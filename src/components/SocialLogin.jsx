@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-toastify";
 
-import { AuthContext } from "../context/AuthContextProvider";
+import { AuthContext } from "../context/AuthContext";
 import { signInWithGoogle, userLogout } from "../services/apis/User";
 import { AUTH_MESSAGES } from "../constants/appConstants";
 

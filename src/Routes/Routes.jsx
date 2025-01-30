@@ -1,14 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../Layout/MainLayout";
 import AuthLayout from "../Layout/AuthLayout";
+import PublicRoute from "./PublicRoute";
+import PrivateRoute from "./PrivateRoute";
 import Home from "../pages/Home/Home";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
-import Profile from "../pages/Profile/Profile";
 import NotFound from "../pages/NotFound/NotFound";
-import PrivateRoute from "./PrivateRoute";
-import PublicRoute from "./PublicRoute";
+import Profile from "../pages/Profile/Profile";
+import CarLoan from "../pages/CarLoan/CarLoan";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "car-loan",
+        element: <CarLoan />,
       },
     ],
   },
