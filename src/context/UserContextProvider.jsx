@@ -19,7 +19,6 @@ export const UserContextProvider = ({ children }) => {
           setIsLoading(true);
           setError(null);
           const data = await getUserProfile();
-          console.log("getUserProfile", data);
           if (data && data.user) {
             setUserDetails(data.user);
           } else {

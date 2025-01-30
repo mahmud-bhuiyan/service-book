@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button, Input, Form, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { FaUserCircle } from "react-icons/fa";
+import DynamicHelmet from "../../components/Custom/DynamicHelmet";
 
 const EditableForm = ({
   userData,
@@ -123,6 +124,7 @@ const Profile = () => {
 
   return (
     <div className="flex flex-col md:flex-row p-6 bg-gray-100 min-h-screen">
+      <DynamicHelmet title={"Profile | ServiceBook"} />
       <div className="w-full md:w-1/4 p-4 bg-white rounded-lg shadow-md">
         <h3 className="text-xl font-semibold mb-4">Profile</h3>
         <div className="mb-4 text-center">

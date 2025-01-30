@@ -58,7 +58,9 @@ const Navbar = () => {
     <nav className="bg-[#402F3F] shadow fixed top-0 w-full z-50">
       <div className="max-w-screen-xl p-2 mx-auto">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-white">{APP_NAME}</h1>
+          <Link to="/">
+            <h1 className="text-2xl font-bold text-white">{APP_NAME}</h1>
+          </Link>
           <div className="relative flex gap-4">
             {user ? (
               <button
