@@ -14,9 +14,7 @@ createRoot(document.getElementById("root")).render(
     <AuthContextProvider>
       <UserContextProvider>
         <HelmetProvider>
-          <div className="mx-auto max-w-screen-2xl">
             <RouterProvider router={router} />
-          </div>
           <ToastContainer />
         </HelmetProvider>
       </UserContextProvider>

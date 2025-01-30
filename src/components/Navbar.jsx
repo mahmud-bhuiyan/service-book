@@ -55,8 +55,8 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-[#402F3F] shadow fixed top-0 w-full z-50">
-      <div className="max-w-screen-xl p-2 mx-auto">
+    <nav className="bg-gray-800 shadow fixed top-0 z-50 w-full">
+      <div className="container mx-auto px-4 py-2">
         <div className="flex items-center justify-between">
           <Link to="/">
             <h1 className="text-2xl font-bold text-white">{APP_NAME}</h1>

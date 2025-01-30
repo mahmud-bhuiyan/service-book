@@ -4,13 +4,13 @@ import Footer from "../components/Footer";
 
 const MainLayout = () => {
   return (
-    <div>
+    <>
       <Navbar />
-      <div className="min-h-screen flex items-center justify-center bg-[#DFF2EB]">
+      <div className="container mx-auto min-h-screen flex items-center justify-center bg-[#DFF2EB]">
         <Outlet />
       </div>
       <Footer />
-    </div>
+    </>
   );
 };
 
